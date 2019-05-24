@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Title:      PlexGuide (Reference Title File)
+# Title:      PGBlitz (Reference Title File)
 # Author(s):  Admin9705
-# URL:        https://plexguide.com - http://github.plexguide.com
+# URL:        https://pgblitz.com - http://github.pgblitz.com
 # GNU:        General Public License v3.0
 ################################################################################
 ---
@@ -18,42 +18,14 @@
         extport: '8984'
         image: 'lsiodev/sonarr-preview'
 
+    # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
-      include_tasks: '/opt/plexguide/containers/_core.yml'
-
-    # EXTRA FUNCTIONS REQUIRED BY THE ROLE #####################################
-
-    - name: 'Create scripts directory for {{pgrole}}'
-      file:
-        path: /opt/appdata/{{pgrole}}/scripts
-        state: directory
-        owner: 1000
-        group: 1000
-        mode: 0755
-
-    - name: 'Create plugins directory for {{pgrole}}'
-      file:
-        path: /opt/appdata/{{pgrole}}/plugins
-        state: directory
-        owner: 1000
-        group: 1000
-        mode: 0755
-
-    - name: 'Copy scripts into directory for {{pgrole}}'
-      copy:
-        src: ./templates/cleanup-sonarr.sh
-        dest: /opt/appdata/{{pgrole}}/scripts
-        directory_mode: yes
-        force: yes
-        owner: 1000
-        group: 1000
-        mode: 0755
+      include_tasks: '/opt/communityapps/apps/_core.yml'
 
     # LABELS #### KEEPS BOTTOM CLEAN ###########################################
     - name: 'Adding Traefik'
       set_fact:
         pg_labels:
-          traefik.protocol: 'https'
           traefik.frontend.auth.forward.address: '{{gauth}}'
           traefik.enable: 'true'
           traefik.port: '{{intport}}'
@@ -70,8 +42,8 @@
     - name: 'Setting PG ENV'
       set_fact:
         pg_env:
-          PUID: 1000
-          PGID: 1000
+          PUID: '1000'
+          PGID: '1000'
 
     # MAIN SCRIPT ##############################################################
 

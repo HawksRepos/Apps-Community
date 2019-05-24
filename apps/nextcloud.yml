@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Title:      PlexGuide (Reference Title File)
+# Title:      PGBlitz (Reference Title File)
 # Author(s):  Admin9705
-# URL:        https://plexguide.com - http://github.plexguide.com
+# URL:        https://pgblitz.com - http://github.pgblitz.com
 # GNU:        General Public License v3.0
 ################################################################################
 ---
@@ -19,16 +19,7 @@
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
-      include_tasks: '/opt/plexguide/containers/_core.yml'
-
-    # EXTRA #######################################################################
-    - name: Create required directories
-      file: 'path={{item}} state=directory mode=0775 owner=1000 group=1000'
-      with_items:
-        - /opt/appdata/nextcloud
-        - /opt/appdata/nextcloud/conf
-        - /opt/appdata/nextcloud/data
-        - /mnt/unionfs/nextcloud
+      include_tasks: '/opt/communityapps/apps/_core.yml'
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
@@ -53,8 +44,8 @@
     - name: 'Setting PG ENV'
       set_fact:
         pg_env:
-          PUID: 1000
-          PGID: 1000
+          PUID: '1000'
+          PGID: '1000'
 
     - name: Create and start nextcloud container
       docker_container:
@@ -64,8 +55,8 @@
         published_ports:
           - '127.0.0.0.1:4645:443'
         env:
-          PUID: 1000
-          PGID: 1000
+          PUID: '1000'
+          PGID: '1000'
         volumes: '{{pg_volumes}}'
         networks:
           - name: plexguide
