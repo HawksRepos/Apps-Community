@@ -1,5 +1,3 @@
-
-
 #!/bin/bash
 #
 # Title:      PGBlitz FireFly iii Finance App
@@ -64,10 +62,8 @@
       #    - '{{ports.stdout}}{{extport}}:{{intport}}'
       #    - '{{ports.stdout}}{{extport2}}:{{intport2}}'
       #    - '{{ports.stdout}}{{extport3}}:{{intport3}}'
-      #  published_ports: <<<< exposed 
-      #    - '{{extport}}:{{intport}}'
-      #    - '{{extport2}}:{{intport2}}'
-      #    - '{{extport3}}:{{intport3}}'
+       published_ports:
+           - '{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
         links: 
@@ -80,18 +76,9 @@
         state: started
         labels: '{{pg_labels}}'
         volumes: 
-          -
-          source: firefly_iii_export
-          target: /var/www/firefly-iii/storage/export
-          type: volume
-          - 
-          source: firefly_iii_upload
-          target: /var/www/firefly-iii/storage/upload
-          type: volume
-         volumes: 
-          firefly_iii_db: /opt/appdata/firefly/db
-          firefly_iii_export: /opt/appdata/firefly/export
-          firefly_iii_upload: /opt/appdata/firefly/upload
+          - /opt/appdata/firefly/export:/var/www/firefly-iii/storage/export
+          - /opt/appdata/firefly/upload:/var/www/firefly-iii/storage/upload
+          - /opt/appdata/firefly/db:/var/lib/postgresql/data
         environment: 
           - POSTGRES_PASSWORD: flash
           - POSTGRES_USER: flash
@@ -99,17 +86,4 @@
         networks: 
           - firefly_iii_net
         volumes: 
-          - "firefly_iii_db:/var/lib/postgresql/data"
-##PG-Community
-
-##PG-Community
-
-##PG-Community
-
-##PG-Community
-
-##PG-Community
-
-##PG-Community
-
-##PG-Community
+          - "/opt/appdata/firefly/db:/var/lib/postgresql/data"
