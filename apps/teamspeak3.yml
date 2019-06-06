@@ -84,3 +84,5 @@
         - name: 'Wait 30 Seconds'
           wait_for:
             timeout: 30
+
+##PG-Community

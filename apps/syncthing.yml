@@ -95,3 +95,5 @@
             replace: '<defaultFolderPath>/sync</defaultFolderPath>'
 
       when: not xmlcheck.stat.exists
+
+##PG-Community

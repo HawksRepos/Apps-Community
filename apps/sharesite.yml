@@ -75,3 +75,5 @@
               - '{{pgrole}}'
         state: started
         labels: '{{pg_labels}}'
+
+##PG-Community

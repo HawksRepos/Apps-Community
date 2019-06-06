@@ -1,0 +1,102 @@
+
+
+#!/bin/bash
+#
+# Title:      PGBlitz FireFly iii Finance App
+# Author(s):  Cardinalfielder & Mostly Firefly iii
+# URL:        https://pgblitz.com - https://github.com/firefly-iii/firefly-iii
+# GNU:        General Public License v3.0 
+################################################################################
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    # FACTS #######################################################################
+    - name: 'Set Known Facts'
+      set_fact:
+        pgrole: 'firefly'
+        intport: '80'
+        extport: '8888'
+        image: 'jc5x/firefly-iii'
+
+    # CORE (MANDATORY) ############################################################
+    - name: 'Including cron job'
+      include_tasks: '/opt/communityapps/apps/_core.yml'
+
+    # LABELS ######################################################################
+    - name: 'Adding Traefik'
+      set_fact:
+        pg_labels:
+          traefik.frontend.auth.forward.address: '{{gauth}}'
+          traefik.enable: 'true'
+          traefik.port: '{{intport}}'
+          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}},{{tldset}}'
+
+    - name: 'Setting PG Volumes'
+      set_fact:
+        pg_volumes:
+          - '/opt/appdata/{{pgrole}}/home/:/config:rw'
+          - '{{path.stdout}}:{{path.stdout}}'
+          - '/etc/localtime:/etc/localtime:ro'
+
+    - name: 'Setting PG ENV'
+      set_fact:
+        pg_env:
+          PUID: '1000'
+          PGID: '1000'
+          TZ: '${TZ}'
+          FF_DB_HOST: firefly_iii_db
+          FF_DB_NAME: firefly
+          FF_DB_USER: flash
+          FF_DB_PASSWORD: flash
+          FF_APP_KEY: Th1s1s1337Sp34kkdh73920f7j48flkc
+          FF_APP_ENV: local
+          FF_DB_CONNECTION: pgsql
+          APP_LOG_LEVEL: debug
+          
+    # MAIN DEPLOYMENT #############################################################
+    - name: 'Deploying {{pgrole}}'
+      docker_container:
+        name: '{{pgrole}}'
+        image: '{{image}}'
+        pull: yes
+      #  published_ports: <<<<not exposed 
+      #    - '{{ports.stdout}}{{extport}}:{{intport}}'
+      #    - '{{ports.stdout}}{{extport2}}:{{intport2}}'
+      #    - '{{ports.stdout}}{{extport3}}:{{intport3}}'
+      #  published_ports: <<<< exposed 
+      #    - '{{extport}}:{{intport}}'
+      #    - '{{extport2}}:{{intport2}}'
+      #    - '{{extport3}}:{{intport3}}'
+        volumes: '{{pg_volumes}}'
+        env: '{{pg_env}}'
+        links: 
+          - firefly_iii_db
+        restart_policy: unless-stopped
+        networks:
+          - name: plexguide
+            aliases:
+              - '{{pgrole}}'
+        state: started
+        labels: '{{pg_labels}}'
+        volumes: 
+          -
+          source: firefly_iii_export
+          target: /var/www/firefly-iii/storage/export
+          type: volume
+          - 
+          source: firefly_iii_upload
+          target: /var/www/firefly-iii/storage/upload
+          type: volume
+         volumes: 
+          firefly_iii_db: /opt/appdata/firefly/db
+          firefly_iii_export: /opt/appdata/firefly/export
+          firefly_iii_upload: /opt/appdata/firefly/upload
+        environment: 
+          - POSTGRES_PASSWORD: flash
+          - POSTGRES_USER: flash
+        image: "postgres:10"
+        networks: 
+          - firefly_iii_net
+        volumes: 
+          - "firefly_iii_db:/var/lib/postgresql/data"
