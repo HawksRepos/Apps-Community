@@ -100,3 +100,8 @@
           - firefly_iii_net
         volumes: 
           - "firefly_iii_db:/var/lib/postgresql/data"
+##PG-Community
+
+##PG-Community
+
+##PG-Community
