@@ -67,7 +67,8 @@
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
         links: 
-          - firefly_iii_db
+     # DATABASE ####################################################
+     firefly_iii_db
         restart_policy: unless-stopped
         networks:
           - name: plexguide
@@ -84,6 +85,6 @@
           - POSTGRES_USER: flash
         image: "postgres:10"
         networks: 
-          - firefly_iii_net
+          - plexguide
         volumes: 
           - "/opt/appdata/firefly/db:/var/lib/postgresql/data"
