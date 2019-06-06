@@ -68,7 +68,7 @@
         env: '{{pg_env}}'
         links: 
      # DATABASE ####################################################
-     firefly_iii_db
+    - name: firefly_iii_db
         restart_policy: unless-stopped
         networks:
           - name: plexguide
