@@ -62,8 +62,8 @@
       #    - '{{ports.stdout}}{{extport}}:{{intport}}'
       #    - '{{ports.stdout}}{{extport2}}:{{intport2}}'
       #    - '{{ports.stdout}}{{extport3}}:{{intport3}}'
-       published_ports:
-           - '{{extport}}:{{intport}}'
+       #published_ports:
+       #    - '{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
         links: 
