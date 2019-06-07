@@ -69,7 +69,7 @@
         links: 
      # DATABASE ####################################################
     - name: firefly_iii_db
-        restart_policy: unless-stopped
+        restart: unless-stopped
         networks:
           - name: plexguide
             aliases:
@@ -88,3 +88,7 @@
           - plexguide
         volumes: 
           - "/opt/appdata/firefly/db:/var/lib/postgresql/data"
+
+##PG-Community
+
+##PG-Community
