@@ -89,6 +89,3 @@
         volumes: 
           - "/opt/appdata/firefly/db:/var/lib/postgresql/data"
 
-##PG-Community
-
-##PG-Community
