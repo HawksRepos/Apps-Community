@@ -67,8 +67,7 @@
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
         links: 
-     # DATABASE ####################################################
-    - name: firefly_iii_db
+          - name: firefly_iii_db
         restart: unless-stopped
         networks:
           - name: plexguide
@@ -80,12 +79,13 @@
           - /opt/appdata/firefly/export:/var/www/firefly-iii/storage/export
           - /opt/appdata/firefly/upload:/var/www/firefly-iii/storage/upload
           - /opt/appdata/firefly/db:/var/lib/postgresql/data
+      docker_container:
+          - name: 'firefly_iii_db'
+          - image: "postgres:10"    
         environment: 
           - POSTGRES_PASSWORD: flash
           - POSTGRES_USER: flash
-        image: "postgres:10"
         networks: 
           - plexguide
         volumes: 
           - "/opt/appdata/firefly/db:/var/lib/postgresql/data"
-
