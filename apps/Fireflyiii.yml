@@ -82,10 +82,14 @@
       docker_container:
           - name: 'firefly_iii_db'
           - image: "postgres:10"    
-        environment: 
+        env: 
           - POSTGRES_PASSWORD: flash
           - POSTGRES_USER: flash
         networks: 
           - plexguide
         volumes: 
           - "/opt/appdata/firefly/db:/var/lib/postgresql/data"
+
+##PG-Community
+
+##PG-Community
