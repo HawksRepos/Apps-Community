@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Title:      Jdownloader2 for PGBlitz (OAuth security) with OpenVPN integration
-# Author(s):  timekills (mod. h1f0x)
-# URL:        https://hub.docker.com/r/h1f0x/jd2-openvpn
+# Title:      rTorrent + FloodUI integrated OpenVPN
+# Author(s):  h1f0x
+# URL:        https://github.com/h1f0x/rtorrent-flood-openvpn
 # GNU:        General Public License v3.0
 ################################################################################
 ---
@@ -13,14 +13,10 @@
 
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'jd2-openvpn'
-        intport: '5800'
-        extport: '5802'
-        intport2: '5902'
-        extport2: '5902'
-        intport3: '3129'
-        extport3: '3129'
-        image: 'h1f0x/jd2-openvpn'
+        pgrole: 'rflood-vpn'
+        intport: '80'
+        extport: '5896'
+        image: 'h1f0x/rtorrent-flood-openvpn'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -44,24 +40,30 @@
           traefik.enable: 'true'
           traefik.port: '{{intport}}'
           traefik.frontend.auth.forward.address: '{{gauth}}'
-          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}},{{tldset}}'
+          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
+          traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
+          traefik.frontend.headers.SSLRedirect: 'true'
+          traefik.frontend.headers.STSIncludeSubdomains: 'true'
+          traefik.frontend.headers.STSPreload: 'true'
+          traefik.frontend.headers.STSSeconds: '315360000'
+          traefik.frontend.headers.browserXSSFilter: 'true'
+          traefik.frontend.headers.contentTypeNosniff: 'true'
+          traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
+          traefik.frontend.headers.forceSTSHeader: 'true'
 
     - name: 'Setting PG Volumes'
       set_fact:
         pg_volumes:
-          - '/opt/appdata/{{pgrole}}:/config'
-          - '{{path.stdout}}:{{path.stdout}}'
-          - '/mnt/unionfs:/unionfs'
-          - '/mnt:/mnt'
-          - '{{path.stdout}}/downloads/{{pgrole}}/:/output:rw'
           - '/etc/localtime:/etc/localtime:ro'
-          - '/opt/appdata/{{pgrole}}/vpn:/vpn:rw'
+          - '{{path.stdout}}:{{path.stdout}}'
+          - '/mnt:/mnt'
+          - '/opt/appdata/{{pgrole}}:/config'
 
     - name: 'Setting PG ENV'
       set_fact:
         pg_env:
-          UID: '1000'
-          GID: '1000'
+          UID: 1000
+          GID: 1000
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -79,7 +81,5 @@
             aliases:
               - '{{pgrole}}'
         privileged: yes
-        devices:
-          - '/dev/net/tun'
         state: started
         labels: '{{pg_labels}}'
