@@ -28,9 +28,9 @@
     - name: 'Adding Traefik'
       set_fact:
         pg_labels:
-          ##########traefik.frontend.auth.forward.address: '{{gauth}}' ##Disabled OAuth as you cant user terminal for cloning any repo
           traefik.enable: 'true'
           traefik.port: '{{intport}}'
+          ##### traefik.frontend.auth.forward.address: '{{gauth}}'
           traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
           traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
           traefik.frontend.headers.SSLRedirect: 'true'
@@ -41,7 +41,6 @@
           traefik.frontend.headers.contentTypeNosniff: 'true'
           traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
           traefik.frontend.headers.forceSTSHeader: 'true'
-
     - name: 'Setting PG Volumes'
       set_fact:
         pg_volumes:

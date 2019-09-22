@@ -34,11 +34,10 @@
         - '/opt/appdata/{{pgrole}}/logs'
 
     # LABELS ######################################################################
-
     - name: 'Adding Traefik'
       set_fact:
         pg_labels:
-          traefik.enable: 'false'
+          traefik.enable: 'true'
           traefik.port: '{{intport}}'
           traefik.frontend.auth.forward.address: '{{gauth}}'
           traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
@@ -51,9 +50,8 @@
           traefik.frontend.headers.contentTypeNosniff: 'true'
           traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
           traefik.frontend.headers.forceSTSHeader: 'true'
-
+          
     # VOLUMES #########
-
     - name: 'Setting PG Volumes'
       set_fact:
         pg_volumes:
