@@ -35,6 +35,9 @@
         path: '/opt/appdata/{{pgrole}}/rss/transmission-rss.conf'
       register: cfgcheck
 
+    - name: 'Including folders'
+      include_tasks: '/opt/communityapps/apps/_downloaders.yml'
+
     # LABELS ######################################################################
     - name: 'Adding Traefik'
       set_fact:
