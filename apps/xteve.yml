@@ -45,7 +45,7 @@
         pg_volumes:
           - '/opt/appdata/{{pgrole}}:/root/.xteve:rw'
           - '/opt/appdata/tvheadend/data/:/TVH'
-          - '/opt/appdata/{{pgrole}}/_config:/config:rw
+          - '/opt/appdata/{{pgrole}}/_config:/config:rw'
           - '/opt/appdata/{{pgrole}}/temp:/tmp/xteve'
           - '{{path.stdout}}:{{path.stdout}}'
           - '/etc/localtime:/etc/localtime:ro'
