@@ -23,23 +23,11 @@
     - name: 'Including cron job'
       include_tasks: '/opt/communityapps/apps/_core.yml'
 
+    - name: 'Including plugins'
+      include_tasks: '/opt/communityapps/apps/_plugins.yml'
+      
     # EXTRA FUNCTIONS REQUIRED BY THE ROLE #####################################
 
-    - name: 'Create scripts directory for {{pgrole}}'
-      file:
-        path: /opt/appdata/{{pgrole}}/scripts
-        state: directory
-        owner: 1000
-        group: 1000
-        mode: 0755
-
-    - name: 'Create plugins directory for {{pgrole}}'
-      file:
-        path: /opt/appdata/{{pgrole}}/plugins
-        state: directory
-        owner: 1000
-        group: 1000
-        mode: 0755
 
     # LABELS #### KEEPS BOTTOM CLEAN ###########################################
     - name: 'Adding Traefik'
