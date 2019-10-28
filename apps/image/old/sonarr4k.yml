@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Title:      OmbiHDR
-# Author(s):  Admin9705; timekills mod
+# Title:      PGBlitz (Reference Title File)
+# Author(s):  Admin9705
 # URL:        https://pgblitz.com - http://github.pgblitz.com
 # GNU:        General Public License v3.0
 ################################################################################
@@ -9,34 +9,24 @@
 - hosts: localhost
   gather_facts: false
   tasks:
-    # FACTS #######################################################################
+    # CORE (MANDATORY) DO NOT CHANGE ###########################################
 
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'ombiHDR'
-        intport: '3579'
-        extport: '3581'
-        image: 'linuxserver/ombi'
+        pgrole: 'sonarr4k'
+        intport: '8989'
+        extport: '8984'
+        image: 'lsiodev/sonarr-preview'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
       include_tasks: '/opt/coreapps/apps/_core.yml'
 
-    # PRETASKS ####################################################################
-    - name: Check JSON exists
-      stat:
-        path: '/opt/appdata/{{pgrole}}/appsettings.json'
-      register: jsonfile
+    - name: 'Including plugins'
+      include_tasks: '/opt/coreapps/apps/_plugins.yml'
 
-    - name: 'Download {{pgrole}} appsettings.json config file'
-      get_url:
-        url: https://raw.githubusercontent.com/tidusjar/Ombi/master/src/Ombi/appsettings.json
-        dest: /opt/appdata/{{pgrole}}/appsettings.json
-        owner: '1000'
-        group: '1000'
-        force: no
-      ignore_errors: True
-      when: jsonfile.stat.exists == False
+    - name: 'Including Tasks'
+      include_tasks: '/opt/coreapps/apps/templates/tasks/dynamic.yml'
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
@@ -45,7 +35,7 @@
           traefik.enable: 'true'
           traefik.port: '{{intport}}'
           traefik.frontend.auth.forward.address: '{{gauth}}'
-          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
+          traefik.frontend.rule: 'Host:{{tldset}}{{cname}}'
           traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
           traefik.frontend.headers.SSLRedirect: 'true'
           traefik.frontend.headers.STSIncludeSubdomains: 'true'
@@ -59,10 +49,11 @@
     - name: 'Setting PG Volumes'
       set_fact:
         pg_volumes:
-          - '/etc/localtime:/etc/localtime:ro'
+          - '{{path.stdout}}:{{path.stdout}}'
+          - '/mnt:/mnt'
           - '/opt/appdata/{{pgrole}}:/config'
-          - '/opt/appdata/{{pgrole}}/appsettings.json:/opt/{{pgrole}}/appsettings.json'
-
+          - '/opt/appdata/{{pgrole}}/mp4_automator:/config_mp4_automator'
+          
     - name: 'Setting PG ENV'
       set_fact:
         pg_env:
@@ -70,7 +61,6 @@
           PGID: '1000'
 
     # MAIN DEPLOYMENT #############################################################
-
     - name: 'Deploying {{pgrole}}'
       docker_container:
         name: '{{pgrole}}'

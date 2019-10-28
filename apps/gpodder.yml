@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Title:      Traktor docker container - track you Plex TV-Show progress
-# Author(s):  h1f0x
-# URL:        https://github.com/h1f0x/docker-trackt-plex-tracker
+# Title:      PGBlitz (Reference Title File)
+# Author(s):  Admin9705
+# URL:        https://pgblitz.com - http://github.pgblitz.com
 # GNU:        General Public License v3.0
 ################################################################################
 ---
@@ -10,17 +10,16 @@
   gather_facts: false
   tasks:
     # FACTS #######################################################################
-
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'traktor'
-        intport: '80'
-        extport: '5892'
-        image: 'h1f0x/docker-traktor'
+        pgrole: 'gpodder'
+        intport: '8080'
+        extport: '3389'
+        image: 'xthursdayx/docker-gpodder'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
-      include_tasks: '/opt/communityapps/apps/_core.yml'
+      include_tasks: '/opt/coreapps/apps/_core.yml'
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
@@ -43,17 +42,18 @@
     - name: 'Setting PG Volumes'
       set_fact:
         pg_volumes:
-          - '/etc/localtime:/etc/localtime:ro'
-          - '{{path.stdout}}:{{path.stdout}}'
-          - '/mnt:/mnt'
           - '/opt/appdata/{{pgrole}}:/config'
-          - '/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Plug-in Support/Databases:/plex:ro'
+          - '/mnt/'
+          - '/etc/localtime:/etc/localtime:ro'
 
     - name: 'Setting PG ENV'
       set_fact:
         pg_env:
-          UID: '1000'
-          GID: '1000'
+          USE_CONFIG_DIR: 'true'
+          SET_CONTAINER_TIMEZONE: 'true'
+          CONTAINER_TIMEZONE: 'Europe/Copenhagen'
+          PUID: '1000'
+          PGID: '1000'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -65,11 +65,10 @@
           - '{{ports.stdout}}{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
-        restart_policy: unless-stopped
+        restart_policy: always
         networks:
           - name: plexguide
             aliases:
               - '{{pgrole}}'
-        privileged: yes
         state: started
         labels: '{{pg_labels}}'

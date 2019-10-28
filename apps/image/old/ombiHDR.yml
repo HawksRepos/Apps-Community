@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Title:      Traktor docker container - track you Plex TV-Show progress
-# Author(s):  h1f0x
-# URL:        https://github.com/h1f0x/docker-trackt-plex-tracker
+# Title:      OmbiHDR
+# Author(s):  Admin9705; timekills mod
+# URL:        https://pgblitz.com - http://github.pgblitz.com
 # GNU:        General Public License v3.0
 ################################################################################
 ---
@@ -13,14 +13,32 @@
 
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'traktor'
-        intport: '80'
-        extport: '5892'
-        image: 'h1f0x/docker-traktor'
+        pgrole: 'ombiHDR'
+        intport: '3579'
+        extport: '3581'
+        image: 'linuxserver/ombi'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
-      include_tasks: '/opt/communityapps/apps/_core.yml'
+      include_tasks: '/opt/coreapps/apps/_core.yml'
+
+    - name: 'Including Tasks'
+      include_tasks: '/opt/coreapps/apps/templates/tasks/dynamic.yml'
+    # PRETASKS ####################################################################
+    - name: Check JSON exists
+      stat:
+        path: '/opt/appdata/{{pgrole}}/appsettings.json'
+      register: jsonfile
+
+    - name: 'Download {{pgrole}} appsettings.json config file'
+      get_url:
+        url: https://raw.githubusercontent.com/tidusjar/Ombi/master/src/Ombi/appsettings.json
+        dest: /opt/appdata/{{pgrole}}/appsettings.json
+        owner: '1000'
+        group: '1000'
+        force: no
+      ignore_errors: True
+      when: jsonfile.stat.exists == False
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
@@ -43,19 +61,17 @@
     - name: 'Setting PG Volumes'
       set_fact:
         pg_volumes:
-          - '/etc/localtime:/etc/localtime:ro'
-          - '{{path.stdout}}:{{path.stdout}}'
-          - '/mnt:/mnt'
           - '/opt/appdata/{{pgrole}}:/config'
-          - '/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Plug-in Support/Databases:/plex:ro'
+          - '/opt/appdata/{{pgrole}}/appsettings.json:/opt/{{pgrole}}/appsettings.json'
 
     - name: 'Setting PG ENV'
       set_fact:
         pg_env:
-          UID: '1000'
-          GID: '1000'
+          PUID: '1000'
+          PGID: '1000'
 
     # MAIN DEPLOYMENT #############################################################
+
     - name: 'Deploying {{pgrole}}'
       docker_container:
         name: '{{pgrole}}'
@@ -70,6 +86,5 @@
           - name: plexguide
             aliases:
               - '{{pgrole}}'
-        privileged: yes
         state: started
         labels: '{{pg_labels}}'

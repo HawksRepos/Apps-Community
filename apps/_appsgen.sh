@@ -13,6 +13,7 @@ ls -la /opt/communityapps/apps/ | sed -e 's/.yml//g' |
 ls -la /opt/mycontainers/ | sed -e 's/.yml//g' |
     awk '{print $9}' | tail -n +4 >>/var/plexguide/app.list
 # Enter Items Here to Prevent them From Showing Up on AppList
+sed -i -e "/old/d" /var/plexguide/app.list
 sed -i -e "/traefik/d" /var/plexguide/app.list
 sed -i -e "/image*/d" /var/plexguide/app.list
 sed -i -e "/_appsgen.sh/d" /var/plexguide/app.list
