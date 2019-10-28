@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Title:      PGBlitz (rdp-calibre)
-# Author(s):  MrDoob
+# Title:      PGBlitz (Reference Title File)
+# Author(s):  Admin9705
 # URL:        https://pgblitz.com - http://github.pgblitz.com
 # GNU:        General Public License v3.0
 ################################################################################
@@ -12,16 +12,14 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'rdp-calibre'
+        pgrole: 'gpodder'
         intport: '8080'
-        extport: '8089'
-        intport2: '8081'
-        extport2: '8090'
-        image: 'aptalca/docker-rdp-calibre:latest'
+        extport: '3389'
+        image: 'xthursdayx/docker-gpodder'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
-      include_tasks: '/opt/communityapps/apps/_core.yml'
+      include_tasks: '/opt/coreapps/apps/_core.yml'
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
@@ -44,21 +42,18 @@
     - name: 'Setting PG Volumes'
       set_fact:
         pg_volumes:
-          - '/opt/appdata/{{pgrole}}:/config:rw'
-          - '{{path.stdout}}:{{path.stdout}}'
-          - '/mnt/unionfs:/unionfs:rw'
-          - '/mnt:/mnt:rw'
+          - '/opt/appdata/{{pgrole}}:/config'
+          - '/mnt/'
           - '/etc/localtime:/etc/localtime:ro'
-          - '/mnt/unionfs/libary:/library:rw'
 
     - name: 'Setting PG ENV'
       set_fact:
         pg_env:
+          USE_CONFIG_DIR: 'true'
+          SET_CONTAINER_TIMEZONE: 'true'
+          CONTAINER_TIMEZONE: 'Europe/Copenhagen'
           PUID: '1000'
           PGID: '1000'
-          TZ: 'America/Chicago'
-          WIDTH: '1280'
-          HEIGHT: '720'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -68,10 +63,9 @@
         pull: yes
         published_ports:
           - '{{ports.stdout}}{{extport}}:{{intport}}'
-          - '{{ports.stdout}}{{extport2}}:{{intport2}}'       
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
-        restart_policy: unless-stopped
+        restart_policy: always
         networks:
           - name: plexguide
             aliases:
