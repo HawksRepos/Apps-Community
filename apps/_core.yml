@@ -60,7 +60,7 @@
 
 - name: Set cname
   set_fact:
-    cname: "{{ucname.stdout}}.{{domain.stdout}}"
+    cname: ",{{ucname.stdout}}.{{domain.stdout}}"
   when:  ucname_check.stat.exists == true and ucname.stdout != ""
 
 - name: check if user port file exists
@@ -131,7 +131,7 @@
 
 - name: 'If Fact Matches - Enable TLD'
   set_fact:
-    tldset: '{{domain.stdout}}'
+    tldset: ',{{domain.stdout}},www.{{domain.stdout}}'
   when: 'toplevel.stdout == pgrole'
 
 - debug: msg="TLDSET is now for {{toplevel.stdout}}"
