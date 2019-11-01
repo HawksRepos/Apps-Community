@@ -60,7 +60,7 @@
 
 - name: Set cname
   set_fact:
-    cname: ",{{ucname.stdout}}.{{domain.stdout}}"
+    cname: "{{ucname.stdout}}.{{domain.stdout}}"
   when:  ucname_check.stat.exists == true and ucname.stdout != ""
 
 - name: check if user port file exists
