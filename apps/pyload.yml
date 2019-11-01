@@ -47,7 +47,6 @@
           - '/opt/appdata/{{pgrole}}:/opt/pyload/pyload-config'
           - '{{path.stdout}}/{{pgrole}}:/opt/pyload/Downloads'
           - '/etc/localtime:/etc/localtime:ro'
-          - '/mnt:/mnt'
 
     - name: 'Setting PG ENV'
       set_fact:

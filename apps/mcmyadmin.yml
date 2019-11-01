@@ -48,7 +48,6 @@
           - '/opt/appdata/{{pgrole}}/Minecraft:/minecraft/Minecraft'
           - '/opt/appdata/{{pgrole}}/plugins:/minecraft/Minecraft/plugins'
           - '{{path.stdout}}:{{path.stdout}}'
-          - '/mnt:/mnt'
           - '/etc/localtime:/etc/localtime:ro'
 
     - name: 'Setting PG ENV'

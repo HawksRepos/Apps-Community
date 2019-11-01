@@ -59,7 +59,6 @@
           - '/opt/appdata/{{pgrole}}/config:/config'
           - '/opt/appdata/{{pgrole}}/sync:/sync'
           - '/opt/appdata/{{pgrole}}/downloads:/downloads'
-          - '/mnt:/mnt'
 
     - name: 'Setting PG ENV'
       set_fact:

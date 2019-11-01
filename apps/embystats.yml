@@ -16,7 +16,7 @@
         pgrole: 'embystats'
         intport: '5432'
         extport: '9049'
-        image: 'uping/embystat:beta-linux'
+        image: 'uping/embystat:beta-ubuntu-x64'
 
     - name: 'Including cron job'
       include_tasks: '/opt/communityapps/apps/_core.yml'
@@ -45,7 +45,6 @@
           - '/opt/appdata/{{pgrole}}:/config'
           - '/opt/appdata/{{pgrole}}:/data'
           - '{{path.stdout}}:{{path.stdout}}'
-          - '/mnt:/mnt'
           - '/etc/localtime:/etc/localtime:ro'
 
     - name: 'Setting PG ENV'

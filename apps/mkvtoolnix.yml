@@ -58,7 +58,6 @@
           - '/opt/appdata/{{pgrole}}:/config:rw'
           - '{{path.stdout}}:{{path.stdout}}'
           - '/etc/localtime:/etc/localtime:ro'
-          - '/mnt:/mnt'
           - '/mnt/downloads/storage:/storage:rw'
 
     - name: 'Setting default ENV'

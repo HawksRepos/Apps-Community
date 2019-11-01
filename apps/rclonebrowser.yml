@@ -47,7 +47,6 @@
           - '/opt/appdata/{{pgrole}}:/config'
           - '{{path.stdout}}:{{path.stdout}}'
           - '/mnt/unionfs:/unionfs:rw'
-          - '/mnt:/mnt:rw'
           - '/opt/appdata/plexguide:/host_rcloneconf_folder:ro'
           - '/etc/localtime:/etc/localtime:ro'
 

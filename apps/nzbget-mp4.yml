@@ -148,7 +148,6 @@
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
           - '{{path.stdout}}:{{path.stdout}}'
-          - '/mnt:/mnt'
           - '/opt/appdata/{{pgrole}}:/config'
           - '/tmp:/tmp'
           - '/opt/appdata/{{pgrole}}/cont-init.d:/etc/cont-init.d'
