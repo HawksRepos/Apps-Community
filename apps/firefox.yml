@@ -52,7 +52,6 @@
         pg_volumes:
           - '/opt/appdata/{{pgrole}}:/config:rw'
           - '{{path.stdout}}:{{path.stdout}}'
-          - '/mnt:/mnt'
           - '/etc/localtime:/etc/localtime:ro'
           - '/dev/shm:/dev/shm:rw'
 

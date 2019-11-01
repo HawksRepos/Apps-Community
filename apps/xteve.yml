@@ -49,7 +49,6 @@
           - '/opt/appdata/{{pgrole}}/temp:/tmp/xteve:rw'
           - '{{path.stdout}}:{{path.stdout}}'
           - '/etc/localtime:/etc/localtime:ro'
-          - '/mnt:/mnt'
 
     - name: 'Setting Environment'
       set_fact:

@@ -56,7 +56,6 @@
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
           - '{{path.stdout}}:{{path.stdout}}'
-          - '/mnt:/mnt'
           - '/opt/appdata/{{pgrole}}:/config'
           - '/opt/appdata/{{pgrole}}/sock:/run/php'
 
