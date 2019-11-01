@@ -39,6 +39,7 @@
           - '/opt/appdata/nextcloud/data:/data'
           - '/opt/appdata/{{pgrole}}/conf:/config'
           - '{{path.stdout}}:{{path.stdout}}'
+          - '/mnt:/mnt'
 
     - name: 'Setting PG ENV'
       set_fact:
@@ -52,7 +53,7 @@
         image: 'linuxserver/nextcloud'
         pull: yes
         published_ports:
-          - '{{extport}}:{{intport}}'
+          - '127.0.0.0.1:4645:443'
         env:
           PUID: '1000'
           PGID: '1000'
