@@ -19,3 +19,11 @@
     group: '1000'
     mode: 0775
   when: copycheck.stat.exists
+
+# scripts permissions
+- name: 'Setting permissions on scripts'
+  shell: 'chmod -R 775 /opt/appdata/{{pgrole}}/scripts'
+
+# scripts permissions
+- name: 'Setting permissions on scripts'
+  shell: 'chmod -R 775 /opt/appdata/{{pgrole}}/plugins'
