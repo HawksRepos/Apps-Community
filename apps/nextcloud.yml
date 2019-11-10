@@ -32,14 +32,14 @@
           traefik.https.frontend.entryPoints: 'https'
           traefik.https.frontend.rule: 'Host:{{tldset}}{{cname}}'
 
-    - name: 'Setting PG Volumes'
+    - name: 'Setting {{pgrole}} Volumes'
       set_fact:
         pg_volumes:
           - '/opt/appdata/{{pgrole}}/data:/data'
           - '/opt/appdata/{{pgrole}}/conf:/config'
           - '{{path.stdout}}:{{path.stdout}}'
 
-    - name: 'Setting PG ENV'
+    - name: 'Setting {{pgrole}} ENV'
       set_fact:
         pg_env:
           PUID: '1000'
