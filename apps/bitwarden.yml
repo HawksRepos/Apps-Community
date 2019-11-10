@@ -28,15 +28,15 @@
           traefik.enable: 'true'
           traefik.backend: '{{pgrole}}'
           traefik.port: '80'
-          traefik.frontend.rule: 'Host:{{tldset}}{{cname}}'
+          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
 
-    - name: 'Setting PG Volumes'
+    - name: 'Setting {{pgrole}} Volumes'
       set_fact:
         pg_volumes:
           - '/opt/appdata/{{pgrole}}/data:/data'
           - '/opt/appdata/{{pgrole}}/database:/database'
 
-    - name: 'Setting PG ENV'
+    - name: 'Setting {{pgrole}} ENV'
       set_fact:
         pg_env:
           PUID: '1000'

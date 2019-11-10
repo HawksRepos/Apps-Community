@@ -27,13 +27,13 @@
         pg_labels:
           traefik.enable: 'false'
 
-    - name: 'Setting PG Volumes'
+    - name: 'Setting {{pgrole}} Volumes'
       set_fact:
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
           - '/opt/appdata/{{pgrole}}:/config'
 
-    - name: 'Setting PG ENV'
+    - name: 'Setting {{pgrole}} ENV'
       set_fact:
         pg_env:
           UID: '1000'
