@@ -21,7 +21,7 @@
     - name: 'Including cron job'
       include_tasks: '/opt/communityapps/apps/_core.yml'
 
-    - name: 'Including required folders'
+    - name: 'Including folders'
       include_tasks: '/opt/communityapps/apps/_downloaders.yml'
 
     - name: 'Including plugins'

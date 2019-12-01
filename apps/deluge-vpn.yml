@@ -13,14 +13,14 @@
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'deluge-vpn'
-        intport: '8112'
-        extport: '8112'
+        intport1: '8112'
+        extport1: '8112'
         intport2: '8118'
         extport2: '8118'
-        intport3: '58846'
-        extport3: '58846'
-        intport4: '58946'
-        extport4: '58946'
+        # intport3: '58846'
+        # extport3: '58846'
+        # intport4: '58946'
+        # extport4: '58946'
         image: 'binhex/arch-delugevpn'
 
     # CORE (MANDATORY) ############################################################
@@ -83,10 +83,8 @@
         image: '{{image}}'
         pull: yes
         published_ports:
-          - '{{ports.stdout}}{{extport}}:{{intport}}'
+          - '{{ports.stdout}}{{extport1}}:{{intport1}}'
           - '{{ports.stdout}}{{extport2}}:{{intport2}}'
-          - '{{ports.stdout}}{{extport3}}:{{intport3}}'
-          - '{{ports.stdout}}{{extport4}}:{{intport4}}'
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
         restart_policy: unless-stopped
@@ -152,14 +150,14 @@
       lineinfile:
         path: '/opt/appdata/{{pgrole}}/core.conf'
         regexp: '"move_completed".*'
-        line: '"move_completed": True,'
+        line: '"move_completed": true,'
         state: present
 
     - name: Setting extractor folder
       lineinfile:
         path: '/opt/appdata/{{pgrole}}/plugins/extractor.conf'
         regexp: '"use_name_folder".*'
-        line: '"use_name_folder": True,'
+        line: '"use_name_folder": true,'
         state: present
 
     - name: Setting extractor
@@ -182,7 +180,7 @@
           lineinfile:
             path: '/opt/appdata/{{pgrole}}/core.conf'
             regexp: '"compact_allocation".*'
-            line: '"compact_allocation": True,'
+            line: '"compact_allocation": true,'
             state: present
 
         - name: set stop_seed_ratio
@@ -203,14 +201,14 @@
           lineinfile:
             path: '/opt/appdata/{{pgrole}}/core.conf'
             regexp: '"remove_seed_at_ratio".*'
-            line: '"remove_seed_at_ratio": True,'
+            line: '"remove_seed_at_ratio": true,'
             state: present
 
         - name: set enc_prefer_rc4
           lineinfile:
             path: '/opt/appdata/{{pgrole}}/core.conf'
             regexp: '"enc_prefer_rc4".*'
-            line: '"enc_prefer_rc4": True,'
+            line: '"enc_prefer_rc4": true,'
             state: present
 
         - name: set enc_level
@@ -245,7 +243,7 @@
           lineinfile:
             path: '/opt/appdata/{{pgrole}}/core.conf'
             regexp: '"dont_count_slow_torrents".*'
-            line: '"dont_count_slow_torrents": True,'
+            line: '"dont_count_slow_torrents": true,'
             state: present
 
         - name: set max_active_seeding
