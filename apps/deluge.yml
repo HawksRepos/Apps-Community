@@ -22,7 +22,7 @@
       include_tasks: '/opt/communityapps/apps/_core.yml'
 
     - name: 'Including folders'
-      include_tasks: '/opt/communityapps/apps/_downloaders.yml'
+      include_tasks: '/opt/communityapps/apps/_downto.yml'
 
     - name: 'Including plugins'
       include_tasks: '/opt/communityapps/apps/_plugins.yml'
