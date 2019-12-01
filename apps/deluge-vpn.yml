@@ -65,13 +65,13 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          VPN_ENABLED: yes
-          VPN_USER: vpnuser
-          VPN_PASS: vpnpass
-          VPN_PROV: custom
-          ENABLE_PRIVOXY: no
-          STRICT_PORT_FORWARD: no
-          LAN_NETWORK: 192.168.1.1/24
+          VPN_ENABLED: 'yes'
+          VPN_USER: 'vpnuser'
+          VPN_PASS: 'vpnpass'
+          VPN_PROV: 'custom'
+          ENABLE_PRIVOXY: 'no'
+          STRICT_PORT_FORWARD: 'no'
+          LAN_NETWORK: '192.168.1.1/24'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
