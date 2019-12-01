@@ -20,16 +20,16 @@
         image: 'binhex/arch-delugevpn'
 
     # CORE (MANDATORY) ############################################################
-    - name: 'Including cron job for {{pgrole}}''
+    - name: 'Including cron job for {{pgrole}}'
       include_tasks: '/opt/communityapps/apps/_core.yml'
 
-    - name: 'Including folders for {{pgrole}}''
+    - name: 'Including folders for {{pgrole}}'
       include_tasks: '/opt/communityapps/apps/_downloaders.yml'
 
-    - name: 'Including plugins for {{pgrole}}''
+    - name: 'Including plugins for {{pgrole}}'
       include_tasks: '/opt/communityapps/apps/_plugins.yml'
 
-    - name: 'Checking for existing appdata for {{pgrole}}''
+    - name: 'Checking for existing appdata for {{pgrole}}'
       stat:
         path: /opt/appdata/{{pgrole}}/core.conf
       register: confcheck
