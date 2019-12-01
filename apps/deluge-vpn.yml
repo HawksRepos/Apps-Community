@@ -70,7 +70,7 @@
           VPN_PROV: custom
           ENABLE_PRIVOXY: 'yes'
           STRICT_PORT_FORWARD: 'no'
-          LAN_NETWORK: '192.168.1.1/24'
+          LAN_NETWORK: 192.168.1.1/24
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
