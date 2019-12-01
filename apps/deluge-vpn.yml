@@ -14,9 +14,9 @@
       set_fact:
         pgrole: 'deluge-vpn'
         intport: '8112'
-        extport: '8112'
+        extport: '8113'
         intport2: '8118'
-        extport2: '8118'
+        extport2: '8119'
         image: 'binhex/arch-delugevpn'
 
     # CORE (MANDATORY) ############################################################
@@ -65,10 +65,10 @@
           PUID: '1000'
           PGID: '1000'
           VPN_ENABLED: 'yes'
-          VPN_USER: 'vpnuser'
-          VPN_PASS: 'vpnpass'
-          VPN_PROV: 'custom'
-          ENABLE_PRIVOXY: 'no'
+          VPN_USER: vpnuser
+          VPN_PASS: vpnpass
+          VPN_PROV: custom
+          ENABLE_PRIVOXY: 'yes'
           STRICT_PORT_FORWARD: 'no'
           LAN_NETWORK: '192.168.1.1/24'
 
