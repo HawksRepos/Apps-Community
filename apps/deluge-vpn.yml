@@ -35,7 +35,7 @@
       register: confcheck
 
     # LABELS ######################################################################
-    - name: 'Adding Traefik for {{pgrole}}''
+    - name: 'Adding Traefik for {{pgrole}}'
       set_fact:
         pg_labels:
           traefik.frontend.auth.forward.address: '{{gauth}}'
@@ -52,7 +52,7 @@
           traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
           traefik.frontend.headers.forceSTSHeader: 'true'
 
-    - name: 'Setting Volumes for {{pgrole}}''
+    - name: 'Setting Volumes for {{pgrole}}'
       set_fact:
         pg_volumes:
           - '/opt/appdata/{{pgrole}}:/config'
