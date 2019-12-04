@@ -35,8 +35,11 @@
     - name: 'Adding Traefik'
       set_fact:
         pg_labels:
+          traefik.admin.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
+          traefik.admin.protocol: 'https'
+          traefik.backend: 'unifi'
           traefik.enable: 'true'
-          traefik.port: '{{intport}}'
+          traefik.port: '8443/tcp'
           traefik.frontend.auth.forward.address: '{{gauth}}'
           traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
           traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
@@ -48,6 +51,8 @@
           traefik.frontend.headers.contentTypeNosniff: 'true'
           traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
           traefik.frontend.headers.forceSTSHeader: 'true'
+          traefik.frontend.passHostHeader: 'true'
+          traefik.tags: 'frontend'
 
     - name: 'Setting {{pgrole}} Volumes'
       set_fact:
