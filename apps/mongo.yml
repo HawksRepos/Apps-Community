@@ -9,8 +9,8 @@
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'mongo'
-        intport: ''
-        extport: ''
+        intport: '27017'
+        extport: '27017'
         image: 'mongo:4.0'
 
     # CORE (MANDATORY) ############################################################
