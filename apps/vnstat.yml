@@ -1,0 +1,47 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: 'Set Known Facts'
+      set_fact:
+        pgrole: 'vnstat'
+        intport: '80'
+        extport: '2424'
+        image: 'amarston/vnstat-dashboard:latest'
+    - name: 'Including cron job'
+      include_tasks: '/opt/communityapps/apps/_core.yml'
+    - name: 'Adding Traefik'
+      set_fact:
+        pg_labels:
+          traefik.enable: 'true'
+          traefik.backend: '{{pgrole}}'
+          traefik.port: '80'
+          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
+
+    - name: 'Setting {{pgrole}} Volumes'
+      set_fact:
+        pg_volumes:
+          - '/usr/bin/vnstat:/usr/bin/vnstat'
+          - '/var/lib/vnstat:/var/lib/vnstat'
+
+    - name: 'Setting {{pgrole}} ENV'
+      set_fact:
+        pg_env:
+          PUID: '1000'
+          PGID: '1000'
+
+    # MAIN DEPLOYMENT #############################################################
+    - name: 'Deploying {{pgrole}}'
+      docker_container:
+        name: '{{pgrole}}'
+        image: '{{image}}'
+        pull: yes
+        volumes: '{{pg_volumes}}'
+        env: '{{pg_env}}'
+        restart_policy: unless-stopped
+        networks:
+          - name: plexguide
+            aliases:
+              - '{{pgrole}}'
+        state: started
+        labels: '{{pg_labels}}'
