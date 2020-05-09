@@ -1,28 +1,52 @@
+#!/bin/bash
+#
+################################################################################
 ---
 - hosts: localhost
   gather_facts: false
   tasks:
+    # FACTS #######################################################################
+    - name: Update repositories cache and install "vnstat" packag, if missing and update apt caches if older than 1 day.
+      apt:
+        name: vnstat
+        update_cache: yes
+        cache_valid_time: 86400 #One day
+
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'vnstat'
         intport: '80'
-        extport: '2424'
+        extport: '8090'
         image: 'amarston/vnstat-dashboard:latest'
+
+    # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
       include_tasks: '/opt/communityapps/apps/_core.yml'
+        
+    # LABELS ######################################################################
     - name: 'Adding Traefik'
       set_fact:
         pg_labels:
           traefik.enable: 'true'
-          traefik.backend: '{{pgrole}}'
-          traefik.port: '80'
+          traefik.port: '{{intport}}'
+          traefik.frontend.auth.forward.address: '{{gauth}}'
           traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
+          traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
+          traefik.frontend.headers.SSLRedirect: 'true'
+          traefik.frontend.headers.STSIncludeSubdomains: 'true'
+          traefik.frontend.headers.STSPreload: 'true'
+          traefik.frontend.headers.STSSeconds: '315360000'
+          traefik.frontend.headers.browserXSSFilter: 'true'
+          traefik.frontend.headers.contentTypeNosniff: 'true'
+          traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
+          traefik.frontend.headers.forceSTSHeader: 'true'
 
     - name: 'Setting {{pgrole}} Volumes'
       set_fact:
         pg_volumes:
           - '/usr/bin/vnstat:/usr/bin/vnstat'
           - '/var/lib/vnstat:/var/lib/vnstat'
+          - '/etc/localtime:/etc/localtime:ro'
 
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
@@ -36,12 +60,15 @@
         name: '{{pgrole}}'
         image: '{{image}}'
         pull: yes
+        published_ports:
+          - '{{ports.stdout}}{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
-        restart_policy: unless-stopped
+        restart_policy: always
         networks:
           - name: plexguide
             aliases:
               - '{{pgrole}}'
         state: started
         labels: '{{pg_labels}}'
+    # OTHER ######################################################################
