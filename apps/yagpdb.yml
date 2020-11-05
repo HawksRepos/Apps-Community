@@ -13,8 +13,8 @@
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'yagpdb'
-        intport: '980'
-        extport: '80'
+        intport: '80'
+        extport: '980'
         image: 'caskd/yagpdb:latest'
 
     # CORE (MANDATORY) ############################################################
