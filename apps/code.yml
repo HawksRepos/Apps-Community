@@ -5,7 +5,7 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'speedtest'
+        pgrole: 'code'
         intport: '8443'
         extport: '9988'
         image: 'linuxserver/code-server:latest'
