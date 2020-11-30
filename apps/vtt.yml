@@ -1,10 +1,4 @@
 #!/bin/bash
-#
-# Title:      PGBlitz (Reference Title File)
-# Author(s):  Admin9705
-# URL:        https://pgblitz.com - http://github.pgblitz.com
-# GNU:        General Public License v3.0
-################################################################################
 ---
 - hosts: localhost
   gather_facts: false
@@ -50,8 +44,8 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          FOUNDRY_USERNAME='username'
-          FOUNDRY_PASSWORD='password'
+          FOUNDRY_USERNAME: 'username'
+          FOUNDRY_PASSWORD: 'password'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
