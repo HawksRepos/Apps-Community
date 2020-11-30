@@ -42,6 +42,7 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
+          OOKLA_EULA_GDPR: 'true'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
