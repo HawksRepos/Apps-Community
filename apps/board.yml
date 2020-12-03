@@ -42,12 +42,12 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          POSTGRES_HOST=postgres
-          POSTGRES_PORT=5432
-          POSTGRES_ADMIN_USER=postgres
-          POSTGRES_ADMIN_PASS=admin
-          RESTYA_DB_USERNAME=restya
-          RESTYA_DB_USERPASS=restya
+          POSTGRES_HOST: 'postgres'
+          POSTGRES_PORT: '5432'
+          POSTGRES_ADMIN_USER: 'postgres'
+          POSTGRES_ADMIN_PASS: 'admin'
+          RESTYA_DB_USERNAME: 'restya'
+          RESTYA_DB_USERPASS: 'restya'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
