@@ -8,7 +8,7 @@
         pgrole: 'board'
         intport: '80'
         extport: '1234'
-        image: 'lrestyaplatform/restyaboard:dev'
+        image: 'restyaplatform/restyaboard:dev'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
