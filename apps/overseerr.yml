@@ -6,9 +6,9 @@
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'overseerr'
-        intport: '3000'
+        intport: '5055'
         extport: '5055'
-        image: 'sctx/overseerr'
+        image: 'sctx/overseerr:develop'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -42,6 +42,7 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
+          LOG_LEVEL: 'info'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
