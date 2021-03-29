@@ -40,7 +40,7 @@
       set_fact:
         default_labels:
           traefik.enable: 'true'
-          traefik.port: '{{intport}}'
+          traefik.port: '{{extport}}'
           traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
           traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
           traefik.frontend.headers.SSLRedirect: 'true'
