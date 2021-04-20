@@ -61,3 +61,4 @@
               - '{{pgrole}}'
         state: started
         labels: '{{pg_labels}}'
+        hostname: '{{pgrole}}.{{domain.stdout}}{{tldset}}'
