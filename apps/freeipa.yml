@@ -8,7 +8,7 @@
         pgrole: 'freeipa'
         intport: '80'
         extport: '8880'
-        image: 'freeipa/freeipa-server'
+        image: 'freeipa/freeipa-server:fedora-33'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
