@@ -1,10 +1,3 @@
-#!/bin/bash
-#
-# Title:      PGBlitz (Reference Title File)
-# Author(s):  Admin9705
-# URL:        https://pgblitz.com - http://github.pgblitz.com
-# GNU:        General Public License v3.0
-################################################################################
 ---
 - hosts: localhost
   gather_facts: false
@@ -15,7 +8,7 @@
         pgrole: 'bitwarden'
         intport: '80'
         extport: '2489'
-        image: 'bitwardenrs/server:latest'
+        image: 'vaultwarden/server:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -27,7 +20,7 @@
         pg_labels:
           traefik.enable: 'true'
           traefik.port: '{{intport}}'
-          traefik.frontend.auth.forward.address: '{{gauth}}'
+          traefik.frontend.auth.forward.address: 'http://authelia:9091/api/verify?rd=https://authelia.{{domain.stdout}}/'
           traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
           traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
           traefik.frontend.headers.SSLRedirect: 'true'
