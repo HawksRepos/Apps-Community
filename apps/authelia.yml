@@ -8,7 +8,7 @@
         pgrole: 'authelia'
         intport: '9091'
         extport: '9091'
-        image: '	authelia/authelia:latest'
+        image: 'authelia/authelia:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
