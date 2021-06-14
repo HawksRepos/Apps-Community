@@ -43,6 +43,8 @@
         pg_volumes:
           - '{{path.stdout}}:{{path.stdout}}'
           - '/opt/appdata/{{pgrole}}:/data'
+          - '/opt/appdata/{{pgrole}}/app:/app/api/config'
+          - '/opt/appdata/{{pgrole}}/app/logs:/app/logs'
           
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
