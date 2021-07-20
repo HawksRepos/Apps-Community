@@ -1,0 +1,39 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    # FACTS #######################################################################
+    - name: 'Set Known Facts'
+      set_fact:
+        pgrole: 'tailscale'
+        image: 'deasmi/unraid-tailscale:latest'
+
+
+    # CORE (MANDATORY) ############################################################
+    - name: 'Including main job'
+      include_tasks: '/opt/coreapps/apps/_core.yml'
+
+    - name: 'Setting {{pgrole}} ENV'
+      set_fact:
+        pg_env:
+          PUID: '1000'
+          PGID: '1000'
+          UP_FLAGS: '--advertise-exit-node'
+     ########## DEPLOYMENT ##########
+    - name: 'Deploying {{pgrole}}'
+      docker_container:
+        name: '{{pgrole}}'
+        hostname: '{{pgrole}}'
+        image: '{{image}}'
+        pull: yes
+        volumes:
+          - '/opt/appdata/{{pgrole}}/:/state'
+        env: '{{pg_env}}'
+        capabilities:
+          - 'NET_ADMIN'
+        privileged: true
+        restart_policy: unless-stopped
+        security_opts:
+          - apparmor:unconfined
+        state: started
+        network_mode: 'host'
