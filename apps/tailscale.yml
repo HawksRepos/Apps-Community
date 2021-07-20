@@ -7,12 +7,7 @@
       set_fact:
         pgrole: 'tailscale'
         image: 'deasmi/unraid-tailscale:latest'
-
-
     # CORE (MANDATORY) ############################################################
-    - name: 'Including main job'
-      include_tasks: '/opt/coreapps/apps/_core.yml'
-
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
         pg_env:
@@ -37,3 +32,8 @@
           - apparmor:unconfined
         state: started
         network_mode: 'host'
+    - name: 'enable IP Forwarding'
+      shell: |
+        echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.conf 
+        echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.conf
+        sudo sysctl -p /etc/sysctl.conf
