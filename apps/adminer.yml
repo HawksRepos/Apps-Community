@@ -1,23 +1,28 @@
 #!/bin/bash
 #
+# Title:      adminer
+# Author(s):  Hawks
+# GNU:        General Public License v3.0
 ################################################################################
 ---
 - hosts: localhost
   gather_facts: false
   tasks:
-    # FACTS #######################################################################
+    # CORE (MANDATORY) DO NOT CHANGE ###########################################
+
     - name: "Set Known Facts"
       set_fact:
-        pgrole: "openvpn"
-        intport: "1194"
-        extport: "1194"
-        image: "kylemanna/openvpn"
+        pgrole: "adminer"
+        intport: "8080"
+        extport: "8185"
+        image: "adminer"
 
-    # CORE (MANDATORY) ############################################################
     - name: "Including cron job"
       include_tasks: "/opt/communityapps/apps/_core.yml"
 
-    # LABELS ######################################################################
+    # EXTRA FUNCTIONS REQUIRED BY THE ROLE #####################################
+
+    # LABELS #### KEEPS BOTTOM CLEAN ###########################################
     - name: "Adding Traefik"
       set_fact:
         pg_labels:
@@ -38,7 +43,6 @@
     - name: "Setting {{pgrole}} Volumes"
       set_fact:
         pg_volumes:
-          - "/opt/appdata/{{pgrole}}:/etc/openvpn"
           - "/etc/localtime:/etc/localtime:ro"
 
     - name: "Setting {{pgrole}} ENV"
@@ -46,8 +50,10 @@
         pg_env:
           PUID: "1000"
           PGID: "1000"
+          ADMINER_DESIGN: "flat"
 
-    # MAIN DEPLOYMENT #############################################################
+    # MAIN SCRIPT ##############################################################
+
     - name: "Deploying {{pgrole}}"
       docker_container:
         name: "{{pgrole}}"

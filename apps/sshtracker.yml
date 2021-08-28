@@ -4,59 +4,59 @@
   gather_facts: false
   tasks:
     # FACTS #######################################################################
-    - name: 'Set Known Facts'
+    - name: "Set Known Facts"
       set_fact:
-        pgrole: 'sshtracker'
-        intport: '3001'
-        extport: '3001'
-        image: 'spencercharest/ssh-tracker'
+        pgrole: "sshtracker"
+        intport: "3001"
+        extport: "3001"
+        image: "spencercharest/ssh-tracker"
 
     # CORE (MANDATORY) ############################################################
-    - name: 'Including cron job'
-      include_tasks: '/opt/communityapps/apps/_core.yml'
+    - name: "Including cron job"
+      include_tasks: "/opt/communityapps/apps/_core.yml"
 
     # LABELS ######################################################################
-    - name: 'Adding Traefik'
+    - name: "Adding Traefik"
       set_fact:
         pg_labels:
-          traefik.enable: 'true'
-          traefik.port: '{{intport}}'
-          traefik.frontend.auth.forward.address: '{{gauth}}'
-          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
-          traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
-          traefik.frontend.headers.SSLRedirect: 'true'
-          traefik.frontend.headers.STSIncludeSubdomains: 'true'
-          traefik.frontend.headers.STSPreload: 'true'
-          traefik.frontend.headers.STSSeconds: '315360000'
-          traefik.frontend.headers.browserXSSFilter: 'true'
-          traefik.frontend.headers.contentTypeNosniff: 'true'
-          traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
-          traefik.frontend.headers.forceSTSHeader: 'true'
+          traefik.enable: "true"
+          traefik.port: "{{intport}}"
+          traefik.frontend.auth.forward.address: "http://authelia:9091/api/verify?rd=https://authelia.{{domain.stdout}}/"
+          traefik.frontend.rule: "Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}"
+          traefik.frontend.headers.SSLHost: "{{domain.stdout}}"
+          traefik.frontend.headers.SSLRedirect: "true"
+          traefik.frontend.headers.STSIncludeSubdomains: "true"
+          traefik.frontend.headers.STSPreload: "true"
+          traefik.frontend.headers.STSSeconds: "315360000"
+          traefik.frontend.headers.browserXSSFilter: "true"
+          traefik.frontend.headers.contentTypeNosniff: "true"
+          traefik.frontend.headers.customResponseHeaders: "X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+          traefik.frontend.headers.forceSTSHeader: "true"
 
-    - name: 'Setting {{pgrole}} Volumes'
+    - name: "Setting {{pgrole}} Volumes"
       set_fact:
         pg_volumes:
-          - '/opt/appdata/{{pgrole}}/data:/data'
-          - '/var/log/auth.log:/log/auth.log'
+          - "/opt/appdata/{{pgrole}}/data:/data"
+          - "/var/log/auth.log:/log/auth.log"
 
-    - name: 'Setting {{pgrole}} ENV'
+    - name: "Setting {{pgrole}} ENV"
       set_fact:
         pg_env:
-          PUID: '1000'
-          PGID: '1000'
+          PUID: "1000"
+          PGID: "1000"
 
     # MAIN DEPLOYMENT #############################################################
-    - name: 'Deploying {{pgrole}}'
+    - name: "Deploying {{pgrole}}"
       docker_container:
-        name: '{{pgrole}}'
-        image: '{{image}}'
+        name: "{{pgrole}}"
+        image: "{{image}}"
         pull: yes
-        volumes: '{{pg_volumes}}'
-        env: '{{pg_env}}'
+        volumes: "{{pg_volumes}}"
+        env: "{{pg_env}}"
         restart_policy: unless-stopped
         networks:
           - name: plexguide
             aliases:
-              - '{{pgrole}}'
+              - "{{pgrole}}"
         state: started
-        labels: '{{pg_labels}}'
+        labels: "{{pg_labels}}"
