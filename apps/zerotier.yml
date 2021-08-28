@@ -1,0 +1,46 @@
+#!/bin/bash
+# Title:      Zerotier
+# Author(s):  SpeedyAus
+################################################################################
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    # FACTS #######################################################################
+    - name: "Set Known Facts"
+      set_fact:
+        pgrole: "zerotier-one"
+        image: "zyclonite/zerotier"
+
+    # CORE (MANDATORY) ############################################################
+    - name: "Including cron job"
+      include_tasks: "/opt/communityapps/apps/_core.yml"
+
+    - name: "Setting {{pgrole}} Volumes"
+      set_fact:
+        pg_volumes:
+          - "/opt/appdata/{{pgrole}}/var:/var/lib/zerotier-one"
+          - "/etc/localtime:/etc/localtime:ro"
+
+    - name: "Setting {{pgrole}} ENV"
+      set_fact:
+        pg_env:
+          PUID: "1000"
+          PGID: "1000"
+          HTTP_ALL_INTERFACES: "XXX"
+
+    # MAIN DEPLOYMENT #############################################################
+    - name: "Deploying {{pgrole}}"
+      docker_container:
+        name: "{{pgrole}}"
+        image: "{{image}}"
+        pull: yes
+        volumes: "{{pg_volumes}}"
+        env: "{{pg_env}}"
+        restart_policy: always
+        devices:
+          - "/dev/net/tun:/dev/net/tun"
+        capabilities:
+          - NET_ADMIN
+        network_mode: host
+        state: started
