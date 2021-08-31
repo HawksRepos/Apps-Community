@@ -1,10 +1,3 @@
-#!/bin/bash
-#
-# Title:      Filezilla for PGBlitz (OAuth security)
-# Author(s):  CasperVN
-# URL:        https://pgblitz.com - https://github.com/jlesage/docker-filezilla
-# GNU:        General Public License v3.0
-################################################################################
 ---
 - hosts: localhost
   gather_facts: false

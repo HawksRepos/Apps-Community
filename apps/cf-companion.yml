@@ -1,6 +1,3 @@
-#!/bin/bash
-# Title:      cloudflare-companion
-################################################################################
 ---
 - hosts: localhost
   gather_facts: false

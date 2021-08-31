@@ -1,105 +1,104 @@
-#!/bin/bash
 ---
 - hosts: localhost
   gather_facts: false
   tasks:
     # FACTS #######################################################################
-    - name: 'Set Known Facts'
+    - name: "Set Known Facts"
       set_fact:
-        pgrole: 'tautulli'
-        intport: '8181'
-        extport: '8181'
-        image: 'linuxserver/tautulli:latest'
+        pgrole: "tautulli"
+        intport: "8181"
+        extport: "8181"
+        image: "linuxserver/tautulli:latest"
 
     # CORE (MANDATORY) ############################################################
-    - name: 'Including cron job'
-      include_tasks: '/opt/coreapps/apps/_core.yml'
-    - name: 'Including plugins '
-      include_tasks: '/opt/coreapps/apps/_plugins.yml'
-    - name: 'Checking for existing app data'
+    - name: "Including cron job"
+      include_tasks: "/opt/coreapps/apps/_core.yml"
+    - name: "Including plugins "
+      include_tasks: "/opt/coreapps/apps/_plugins.yml"
+    - name: "Checking for existing app data"
       stat:
         path: /opt/appdata/{{pgrole}}/config.ini
       register: confcheck
 
     # LABELS ######################################################################
-    - name: 'Adding Traefik'
+    - name: "Adding Traefik"
       set_fact:
         pg_labels:
-          traefik.enable: 'true'
-          traefik.port: '{{intport}}'
-          traefik.frontend.auth.forward.address: 'http://authelia:9091/api/verify?rd=https://authelia.{{domain.stdout}}/'
-          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
-          traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
-          traefik.frontend.headers.SSLRedirect: 'true'
-          traefik.frontend.headers.STSIncludeSubdomains: 'true'
-          traefik.frontend.headers.STSPreload: 'true'
-          traefik.frontend.headers.STSSeconds: '315360000'
-          traefik.frontend.headers.browserXSSFilter: 'true'
-          traefik.frontend.headers.contentTypeNosniff: 'true'
-          traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
-          traefik.frontend.headers.forceSTSHeader: 'true'
+          traefik.enable: "true"
+          traefik.port: "{{intport}}"
+          traefik.frontend.auth.forward.address: "http://authelia:9091/api/verify?rd=https://authelia.{{domain.stdout}}/"
+          traefik.frontend.rule: "Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}"
+          traefik.frontend.headers.SSLHost: "{{domain.stdout}}"
+          traefik.frontend.headers.SSLRedirect: "true"
+          traefik.frontend.headers.STSIncludeSubdomains: "true"
+          traefik.frontend.headers.STSPreload: "true"
+          traefik.frontend.headers.STSSeconds: "315360000"
+          traefik.frontend.headers.browserXSSFilter: "true"
+          traefik.frontend.headers.contentTypeNosniff: "true"
+          traefik.frontend.headers.customResponseHeaders: "X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+          traefik.frontend.headers.forceSTSHeader: "true"
 
-    - name: 'Setting {{pgrole}} Volumes'
+    - name: "Setting {{pgrole}} Volumes"
       set_fact:
         pg_volumes:
-          - '/opt/appdata/{{pgrole}}:/config'
-          - '/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Logs:/logs'
-          - '/opt/appdata/{{pgrole}}/scripts:/scripts'
-          - '/etc/localtime:/etc/localtime'
+          - "/opt/appdata/{{pgrole}}:/config"
+          - "/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Logs:/logs"
+          - "/opt/appdata/{{pgrole}}/scripts:/scripts"
+          - "/etc/localtime:/etc/localtime"
 
-    - name: 'Setting {{pgrole}} ENV'
+    - name: "Setting {{pgrole}} ENV"
       set_fact:
         pg_env:
-          PUID: '1000'
-          PGID: '1000' 
+          PUID: "1000"
+          PGID: "1000"
     # MAIN DEPLOYMENT #############################################################
-    - name: 'Deploying {{pgrole}}'
+    - name: "Deploying {{pgrole}}"
       docker_container:
-        name: '{{pgrole}}'
-        image: '{{image}}'
+        name: "{{pgrole}}"
+        image: "{{image}}"
         pull: yes
         published_ports:
-          - '{{ports.stdout}}{{extport}}:{{intport}}'
-        volumes: '{{pg_volumes}}'
-        env: '{{pg_env}}'
+          - "{{ports.stdout}}{{extport}}:{{intport}}"
+        volumes: "{{pg_volumes}}"
+        env: "{{pg_env}}"
         restart_policy: unless-stopped
         networks:
           - name: plexguide
             aliases:
-              - '{{pgrole}}'
+              - "{{pgrole}}"
         state: started
-        labels: '{{pg_labels}}'
+        labels: "{{pg_labels}}"
 
     # Undeployed ########################################################################
-    - name: 'Configuring {{pgrole}} for first time use'
+    - name: "Configuring {{pgrole}} for first time use"
       block:
-        - name: 'Waiting for {{pgrole}} to start'
+        - name: "Waiting for {{pgrole}} to start"
           wait_for:
-            path: '/opt/appdata/{{pgrole}}/config.ini'
+            path: "/opt/appdata/{{pgrole}}/config.ini"
             state: present
-        - name: 'Stop Container'
+        - name: "Stop Container"
           docker_container:
-            name: '{{pgrole}}'
+            name: "{{pgrole}}"
             state: stopped
-        - name: 'Restart {{pgrole}}'
+        - name: "Restart {{pgrole}}"
           docker_container:
-            name: '{{pgrole}}'
+            name: "{{pgrole}}"
             state: started
       when: not confcheck.stat.exists
 
-    - name: 'Update {{pgrole}} for first time use'
+    - name: "Update {{pgrole}} for first time use"
       block:
         - pause:
             prompt: "Wait for {{pgrole}} start up"
             seconds: 5
 
-        - name: 'update {{pgrole}}'
-          shell: 'docker exec {{pgrole}} apk update && docker exec {{pgrole}} apk upgrade'
+        - name: "update {{pgrole}}"
+          shell: "docker exec {{pgrole}} apk update && docker exec {{pgrole}} apk upgrade"
 
-        - name: 'pip update for {{pgrole}}'
-          shell: 'docker exec {{pgrole}} pip install --upgrade PIP'
+        - name: "pip update for {{pgrole}}"
+          shell: "docker exec {{pgrole}} pip install --upgrade PIP"
 
-        - name: 'pip install jsonrpclib-pelix for {{pgrole}}'
-          shell: 'docker exec {{pgrole}} pip install jsonrpclib-pelix'
+        - name: "pip install jsonrpclib-pelix for {{pgrole}}"
+          shell: "docker exec {{pgrole}} pip install jsonrpclib-pelix"
 
       when: confcheck.stat.exists

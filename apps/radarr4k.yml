@@ -3,16 +3,20 @@
   gather_facts: false
   tasks:
     # FACTS #######################################################################
+
     - name: "Set Known Facts"
       set_fact:
-        pgrole: "yacht"
-        intport: "8000"
-        extport: "8003"
-        image: "selfhostedpro/yacht:latest"
+        pgrole: "radarr4k"
+        intport: "7878"
+        extport: "7879"
+        image: "linuxserver/radarr:develop"
 
     # CORE (MANDATORY) ############################################################
     - name: "Including cron job"
       include_tasks: "/opt/coreapps/apps/_core.yml"
+
+    - name: "Including plugins"
+      include_tasks: "/opt/coreapps/apps/_plugins.yml"
 
     # LABELS ######################################################################
     - name: "Adding Traefik"
@@ -35,9 +39,9 @@
     - name: "Setting {{pgrole}} Volumes"
       set_fact:
         pg_volumes:
-          - "/etc/localtime:/etc/localtime:ro"
+          - "{{path.stdout}}:{{path.stdout}}"
           - "/opt/appdata/{{pgrole}}:/config"
-          - "/var/run/docker.sock:/var/run/docker.sock"
+          - "/opt/appdata/{{pgrole}}/mp4_automator:/config_mp4_automator"
 
     - name: "Setting {{pgrole}} ENV"
       set_fact:
@@ -46,6 +50,7 @@
           PGID: "1000"
 
     # MAIN DEPLOYMENT #############################################################
+
     - name: "Deploying {{pgrole}}"
       docker_container:
         name: "{{pgrole}}"
@@ -62,3 +67,14 @@
               - "{{pgrole}}"
         state: started
         labels: "{{pg_labels}}"
+
+    - name: "Checking for existing app data"
+      stat:
+        path: /opt/appdata/{{pgrole}}/config.xml
+      register: confcheck
+
+    - name: "Update {{pgrole}} for first time use"
+      block:
+        - pause:
+            prompt: "Wait for {{pgrole}} start up"
+            seconds: 5

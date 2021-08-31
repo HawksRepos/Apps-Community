@@ -1,90 +1,83 @@
-#!/bin/bash
-#
-# Title:      PGBlitz (Reference Title File)
-# Author(s):  Admin9705
-# URL:        https://pgblitz.com - http://github.pgblitz.com
-# GNU:        General Public License v3.0
-################################################################################
 ---
 - hosts: localhost
   gather_facts: false
   tasks:
     # FACTS #######################################################################
-    - name: 'Set Known Facts'
+    - name: "Set Known Facts"
       set_fact:
-        pgrole: 'unifi'
-        intport: '3478/udp'
-        extport: '3478'
-        intport2: '10001/udp'
-        extport2: '10001'
-        intport3: '8080/tcp'
-        extport3: '8103'
-        intport4: '8081/tcp'
-        extport4: '8081'
-        intport5: '8443/tcp'
-        extport5: '8443'
-        intport6: '8880/tcp'
-        extport6: '8880'
-        image: 'linuxserver/unifi-controller:latest'
+        pgrole: "unifi"
+        intport: "3478/udp"
+        extport: "3478"
+        intport2: "10001/udp"
+        extport2: "10001"
+        intport3: "8080/tcp"
+        extport3: "8103"
+        intport4: "8081/tcp"
+        extport4: "8081"
+        intport5: "8443/tcp"
+        extport5: "8443"
+        intport6: "8880/tcp"
+        extport6: "8880"
+        image: "linuxserver/unifi-controller:latest"
 
     # CORE (MANDATORY) ############################################################
-    - name: 'Including cron job'
-      include_tasks: '/opt/coreapps/apps/_core.yml'
+    - name: "Including cron job"
+      include_tasks: "/opt/coreapps/apps/_core.yml"
 
     # LABELS ######################################################################
-    - name: 'Adding Traefik'
+    - name: "Adding Traefik"
       set_fact:
         pg_labels:
-          traefik.admin.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
-          traefik.admin.protocol: 'https'
-          traefik.backend: 'unifi'
-          traefik.enable: 'true'
-          traefik.port: '8443/tcp'
-          traefik.frontend.auth.forward.address: '{{gauth}}'
-          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
-          traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
-          traefik.frontend.headers.SSLRedirect: 'true'
-          traefik.frontend.headers.STSIncludeSubdomains: 'true'
-          traefik.frontend.headers.STSPreload: 'true'
-          traefik.frontend.headers.STSSeconds: '315360000'
-          traefik.frontend.headers.browserXSSFilter: 'true'
-          traefik.frontend.headers.contentTypeNosniff: 'true'
-          traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
-          traefik.frontend.headers.forceSTSHeader: 'true'
-          traefik.frontend.passHostHeader: 'true'
-          traefik.tags: 'frontend'
+          traefik.admin.frontend.rule: "Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}"
+          traefik.admin.protocol: "https"
+          traefik.backend: "unifi"
+          traefik.enable: "true"
+          traefik.port: "8443/tcp"
+          traefik.frontend.auth.forward.address: "{{gauth}}"
+          traefik.frontend.rule: "Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}"
+          traefik.frontend.headers.SSLHost: "{{domain.stdout}}"
+          traefik.frontend.headers.SSLRedirect: "true"
+          traefik.frontend.headers.STSIncludeSubdomains: "true"
+          traefik.frontend.headers.STSPreload: "true"
+          traefik.frontend.headers.STSSeconds: "315360000"
+          traefik.frontend.headers.browserXSSFilter: "true"
+          traefik.frontend.headers.contentTypeNosniff: "true"
+          traefik.frontend.headers.customResponseHeaders: "X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+          traefik.frontend.headers.forceSTSHeader: "true"
+          traefik.frontend.passHostHeader: "true"
+          traefik.tags: "frontend"
 
-    - name: 'Setting {{pgrole}} Volumes'
+    - name: "Setting {{pgrole}} Volumes"
       set_fact:
         pg_volumes:
-          - '/opt/appdata/{{pgrole}}:/config'
-          - '/etc/localtime:/etc/localtime:ro'
+          - "/opt/appdata/{{pgrole}}:/config"
+          - "/etc/localtime:/etc/localtime:ro"
 
-    - name: 'Setting {{pgrole}} ENV'
+    - name: "Setting {{pgrole}} ENV"
       set_fact:
         pg_env:
-          PUID: '1000'
-          PGID: '1000'
+          PUID: "1000"
+          PGID: "1000"
 
     # MAIN DEPLOYMENT #############################################################
-    - name: 'Deploying {{pgrole}}'
+    - name: "Deploying {{pgrole}}"
       docker_container:
-        name: '{{pgrole}}'
-        image: '{{image}}'
+        name: "{{pgrole}}"
+        image: "{{image}}"
         pull: yes
         published_ports:
-          - '{{extport}}:{{intport}}'
-          - '{{extport2}}:{{intport2}}'
-          - '{{extport3}}:{{intport3}}'
-          - '{{extport4}}:{{intport4}}'
-          - '{{extport5}}:{{intport5}}'
-          - '{{extport6}}:{{intport6}}'
-        volumes: '{{pg_volumes}}'
-        env: '{{pg_env}}'
+          - "{{extport}}:{{intport}}"
+          - "{{extport2}}:{{intport2}}"
+          - "{{extport3}}:{{intport3}}"
+          - "{{extport4}}:{{intport4}}"
+          - "{{extport5}}:{{intport5}}"
+          - "{{extport6}}:{{intport6}}"
+        volumes: "{{pg_volumes}}"
+        env: "{{pg_env}}"
         restart_policy: always
         networks:
           - name: plexguide
             aliases:
-              - '{{pgrole}}'
+              - "{{pgrole}}"
         state: started
-        labels: '{{pg_labels}}'
+        labels: "{{pg_labels}}"

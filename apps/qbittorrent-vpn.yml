@@ -1,10 +1,3 @@
-#!/bin/bash
-#
-# Title:      qBittorrent (with OpenVPN and Privoxy)
-# Author(s):  Mike Tzou (Chocobo1),  Vladimir Golovnev (glassez), Diego Heras (ngosang), binhex
-# URL:        https://www.qbittorrent.org/ - https://github.com/binhex/arch-qbittorrentvpn
-# GNU:        General Public License v2.0 (w/ exception)
-################################################################################
 ---
 - hosts: localhost
   gather_facts: false

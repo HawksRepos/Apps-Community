@@ -1,7 +1,3 @@
-#!/bin/bash
-# Title:      Zerotier
-# Author(s):  SpeedyAus
-################################################################################
 ---
 - hosts: localhost
   gather_facts: false
