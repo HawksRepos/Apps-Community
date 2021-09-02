@@ -1,3 +1,9 @@
+#!/bin/bash
+#
+# Title:      adminer
+# Author(s):  Hawks
+# GNU:        General Public License v3.0
+################################################################################
 ---
 - hosts: localhost
   gather_facts: false

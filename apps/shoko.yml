@@ -1,3 +1,10 @@
+#!/bin/bash
+#
+# Title:      Shoko Anime Server
+# Author(s):  Cayde Dixon (Cazzar), Thomas Baer (da3dsoul), ElementalCrisis, hidden4003
+# URL:        https://shokoanime.com/ - https://github.com/ShokoAnime/ShokoServer
+# GNU:        General Public License v3.0
+################################################################################
 ---
 - hosts: localhost
   gather_facts: false

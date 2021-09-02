@@ -1,3 +1,10 @@
+#!/bin/bash
+#
+# Title:      PGBlitz (rclone browser)
+# Author(s):  MrDoob
+# URL:        https://pgblitz.com - http://github.pgblitz.com
+# GNU:        General Public License v3.0
+################################################################################
 ---
 - hosts: localhost
   gather_facts: false
