@@ -38,7 +38,7 @@
     - name: "Adding Traefik for {{pgrole}}"
       set_fact:
         pg_labels:
-          traefik.frontend.auth.forward.address: "http://authelia:9091/api/verify?rd=https://authelia.{{domain.stdout}}/"
+          traefik.frontend.auth.forward.address: "http://authelia:9091/api/verify?rd=https://auth.{{domain.stdout}}/"
           traefik.enable: "true"
           traefik.port: "{{intport}}"
           traefik.frontend.rule: "Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}"
