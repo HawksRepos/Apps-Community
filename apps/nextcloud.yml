@@ -25,7 +25,7 @@
     - name: "Adding Traefik"
       set_fact:
         pg_labels:
-          traefik.frontend.auth.forward.address: "http://authelia:9091/api/verify?rd=https://authelia.{{domain.stdout}}/"
+          traefik.frontend.auth.forward.address: "http://authelia:9091/api/verify?rd=https://auth.{{domain.stdout}}/"
           traefik.protocol: "https"
           traefik.enable: "true"
           traefik.https.port: "443"
