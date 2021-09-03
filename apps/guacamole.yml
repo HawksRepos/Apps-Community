@@ -26,7 +26,7 @@
       set_fact:
         pg_labels:
           traefik.enable: "true"
-          traefik.frontend.auth.forward.address: "http://authelia:9091/api/verify?rd=https://authelia.{{domain.stdout}}/"
+          traefik.frontend.auth.forward.address: "http://authelia:9091/api/verify?rd=https://auth.{{domain.stdout}}/"
           traefik.frontend.headers.SSLHost: "{{domain.stdout}}"
           traefik.frontend.headers.SSLRedirect: "true"
           traefik.frontend.headers.STSIncludeSubdomains: "true"
