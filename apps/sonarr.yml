@@ -24,7 +24,7 @@
         pg_labels:
           traefik.enable: 'true'
           traefik.port: '{{intport}}'
-          traefik.frontend.auth.forward.address: 'http://authelia:9091/api/verify?rd=https://authelia.{{domain.stdout}}/'
+          traefik.frontend.auth.forward.address: 'http://authelia:9091/api/verify?rd=https://auth.{{domain.stdout}}/'
           traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
           traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
           traefik.frontend.headers.SSLRedirect: 'true'
