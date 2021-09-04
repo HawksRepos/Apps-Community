@@ -141,7 +141,7 @@
             path: '/opt/appdata/{{pgrole}}/sabnzbd.ini'
             section: misc
             option: host_whitelist
-            value: 'sabnzbd.{{domain.stdout}},'
+            value: 'sabnzbd.{{domain.stdout}},sabnzbd,'
             state: present
 
         - name: Set direct_unpack
