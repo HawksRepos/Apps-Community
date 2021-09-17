@@ -23,16 +23,13 @@
     - name: "Setting {{pgrole}} Volumes"
       set_fact:
         pg_volumes:
-          - "/opt/appdata/{{pgrole}}/bitnami:/bitnami"
+          - "/opt/appdata/{{pgrole}}:/bitnami/redis/data"
 
     - name: "Setting {{pgrole}} ENV"
       set_fact:
         pg_env:
           PUID: "1000"
           PGID: "1000"
-          
-    - name: 'Creating bitnami redis folder.'
-      shell: 'mkdir -p /opt/appdata/{{pgrole}}/{{pgrole}}'
 
     # MAIN DEPLOYMENT #############################################################
     - name: "Deploying {{pgrole}}"
