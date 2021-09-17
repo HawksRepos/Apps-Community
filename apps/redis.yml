@@ -30,6 +30,9 @@
         pg_env:
           PUID: "1000"
           PGID: "1000"
+          
+    - name: 'Creating bitnami redis folder.'
+      shell: 'mkdir -p /opt/appdata/{{pgrole}}/{{pgrole}}'
 
     # MAIN DEPLOYMENT #############################################################
     - name: "Deploying {{pgrole}}"
