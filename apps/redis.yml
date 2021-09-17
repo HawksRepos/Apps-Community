@@ -30,6 +30,7 @@
         pg_env:
           PUID: "1000"
           PGID: "1000"
+          ALLOW_EMPTY_PASSWORD: "YES"
 
     # MAIN DEPLOYMENT #############################################################
     - name: "Deploying {{pgrole}}"
