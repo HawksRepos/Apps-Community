@@ -10,7 +10,7 @@
       set_fact:
         pgrole: "redis"
         intport: "6379"
-        extport: "6379"
+        extport: "127.0.0.1:6379"
         image: "bitnami/redis:latest"
 
     # CORE (MANDATORY) ############################################################
