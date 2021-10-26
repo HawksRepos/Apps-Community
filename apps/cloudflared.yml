@@ -6,7 +6,7 @@
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'cloudflared'
-        image: 'cloudflare/cloudflared:2021.5.10-amd64'
+        image: 'cloudflare/cloudflared:2021.10.5-amd64'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
