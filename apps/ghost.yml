@@ -50,11 +50,6 @@
         pg_env:
           PUID: "1000"
           PGID: "1000"
-          url:""
-          mail__transport:""
-          mail__options__service:""
-          mail__options__auth__user:""
-          mail__options__auth__pass:""
           
 
     # MAIN DEPLOYMENT #############################################################
