@@ -16,7 +16,7 @@
         pg_volumes:
           - "/etc/localtime:/etc/localtime:ro"
           - "/opt/appdata/{{pgrole}}/app:/config"
-          - "/opt/appdata/{{pgrole}}:/data
+          - "/opt/appdata/{{pgrole}}:/data"
 
     - name: "Setting {{pgrole}} ENV"
       set_fact:
