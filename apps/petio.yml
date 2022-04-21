@@ -10,7 +10,7 @@
         pgrole: "petio"
         intport: "7777"
         extport: "7779"
-        image: "hotio/petio:latest"
+        image: "ghcr.io/petio-team/petio:new-ui"
 
     # CORE (MANDATORY) ############################################################
     - name: "Including cron job"
