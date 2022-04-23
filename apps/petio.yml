@@ -10,7 +10,7 @@
         pgrole: "petio"
         intport: "7777"
         extport: "7779"
-        image: "hotio/petio:latest"
+        image: "ghcr.io/petio-team/petio:new-ui"
 
     # CORE (MANDATORY) ############################################################
     - name: "Including cron job"
@@ -38,7 +38,7 @@
       set_fact:
         pg_volumes:
           - "/etc/localtime:/etc/localtime:ro"
-          - "/opt/appdata/{{pgrole}}:/config"
+          - "/opt/appdata/{{pgrole}}:/data"
 
     - name: "Setting {{pgrole}} ENV"
       set_fact:
