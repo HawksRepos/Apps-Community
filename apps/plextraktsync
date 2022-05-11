@@ -12,7 +12,7 @@
     - name: "Set Known Facts"
       set_fact:
         pgrole: "plextraktsync"
-        image: "ghcr.io/taxel/plextraktsync"
+        image: "ghcr.io/taxel/plextraktsync:latest"
 
     # CORE (MANDATORY) ############################################################
     - name: "Including cron job"
