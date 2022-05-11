@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# Title:      PlexTraktSync
+# Author(s):  DiscDuck
+# URL:        https://github.com/Taxel/PlexTraktSync
+################################################################################
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    # FACTS #######################################################################
+    - name: "Set Known Facts"
+      set_fact:
+        pgrole: "plextraktsync"
+        image: "ghcr.io/taxel/plextraktsync"
+
+    # CORE (MANDATORY) ############################################################
+    - name: "Including cron job"
+      include_tasks: "/opt/communityapps/apps/_core.yml"
+
+    # LABELS ######################################################################
+    - name: "Setting {{pgrole}} Volumes"
+      set_fact:
+        pg_volumes:
+          - "/opt/appdata/{{pgrole}}:/app/config"
+
+    - name: "Setting {{pgrole}} ENV"
+      set_fact:
+        pg_env:
+          PUID: "1000"
+          PGID: "1000"
+
+    # MAIN DEPLOYMENT #############################################################
+    - name: "Deploying {{pgrole}}"
+      docker_container:
+        name: "{{pgrole}}"
+        image: "{{image}}"
+        pull: yes
+        volumes: "{{pg_volumes}}"
+        env: "{{pg_env}}"
+        networks:
+          - name: plexguide
+            aliases:
+              - "{{pgrole}}"
+        state: started
+        labels: "{{pg_labels}}"
